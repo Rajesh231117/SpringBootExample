@@ -1,0 +1,16 @@
+ BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        String line1 = br.readLine();
+        int T = Integer.parseInt(line1);
+
+        for(int s=0;s<T;s++){
+            String line2 = br.readLine();
+            int L = Integer.parseInt(line2);
+            int arr[]=new int[L];
+
+            String line3 = br.readLine();
+            String V[] = line3.split(" ");
+            int val[]=new int[V.length];
+
+            for(int q=0;q<V.length;q++){
+                val[q] = Integer.parseInt(V[q]);
+            }
