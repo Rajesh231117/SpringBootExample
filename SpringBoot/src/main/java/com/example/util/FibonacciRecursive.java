@@ -13,6 +13,12 @@ static int fib(int n)
 
     public static void main (String args[])
     {
+        try {
+
+        }
+        catch (ArrayIndexOutOfBoundsException ae){
+            throw new ArrayIndexOutOfBoundsException();
+        }
         int n = 4;
         System.out.println(fib(n));
     }

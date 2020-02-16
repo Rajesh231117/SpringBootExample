@@ -1,77 +1,108 @@
 package com.example.util.threads;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Stack;
+import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-public class ProducerConsumerUsingWaitNotify {
+/**
+ * Java program to solve Producer Consumer problem using wait and notify
+ * method in Java. Producer Consumer is also a popular concurrency design pattern.
+ *
+ * @author Javin Paul
+ */
+class ProducerConsumerSolution {
 
-    public static void main(String[] args) {
-        Stack l = new Stack<>();
-        Producer producer = new Producer(l, 3);
-        Consumer consumer = new Consumer(l, 3);
-        producer.start();
-        consumer.start();
+    public static void main(String args[]) {
+        Vector sharedQueue = new Vector();
+        int size = 4;
+        Thread prodThread = new Thread(new Producer(sharedQueue, size), "Producer");
+        Thread consThread = new Thread(new Consumer(sharedQueue, size), "Consumer");
+        prodThread.start();
+        consThread.start();
     }
 }
 
-class Producer extends Thread {
-    Stack st;
-    int size;
+class Producer implements Runnable {
 
-    Producer(Stack st, int size) {
-        this.st = st;
-        this.size = size;
+    private final Vector sharedQueue;
+    private final int SIZE;
+
+    public Producer(Vector sharedQueue, int size) {
+        this.sharedQueue = sharedQueue;
+        this.SIZE = size;
     }
 
     @Override
     public void run() {
-        for (int i = 0; i < 10; i++) {
-            while (st.size() == size) {
-                synchronized (st) {
-                    try {
-                        st.wait();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
+        for (int i = 0; i < 7; i++) {
+            System.out.println("Produced: " + i);
+            try {
+                produce(i);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(Producer.class.getName()).log(Level.SEVERE, null, ex);
             }
-            synchronized (st) {
-                st.push(i);
-                System.out.println("In Producer:" + i);
-                st.notifyAll();
+
+        }
+    }
+
+    private void produce(int i) throws InterruptedException {
+
+        //wait if queue is full
+        while (sharedQueue.size() == SIZE) {
+            synchronized (sharedQueue) {
+                System.out.println("Queue is full " + Thread.currentThread().getName()
+                        + " is waiting , size: " + sharedQueue.size());
+
+                sharedQueue.wait();
             }
+        }
+
+        //producing element and notify consumers
+        synchronized (sharedQueue) {
+            sharedQueue.add(i);
+            sharedQueue.notifyAll();
         }
     }
 }
 
-class Consumer extends Thread {
-    Stack st;
-    int size;
+class Consumer implements Runnable {
 
-    Consumer(Stack st, int size) {
-        this.st = st;
-        this.size = size;
+    private final Vector sharedQueue;
+    private final int SIZE;
+
+    public Consumer(Vector sharedQueue, int size) {
+        this.sharedQueue = sharedQueue;
+        this.SIZE = size;
     }
 
     @Override
     public void run() {
         while (true) {
-            while (st.isEmpty()) {
-                synchronized (st) {
-                    try {
-                        st.wait();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
+            try {
+                System.out.println("Consumed: " + consume());
+                Thread.sleep(50);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(Consumer.class.getName()).log(Level.SEVERE, null, ex);
             }
-            synchronized (st) {
-                System.out.println("In Consumer:" + st.pop());
-                st.notifyAll();
+
+        }
+    }
+
+    private int consume() throws InterruptedException {
+        //wait if queue is empty
+        while (sharedQueue.isEmpty()) {
+            synchronized (sharedQueue) {
+                System.out.println("Queue is empty " + Thread.currentThread().getName()
+                        + " is waiting , size: " + sharedQueue.size());
+
+                sharedQueue.wait();
             }
         }
 
+        //Otherwise consume element and notify waiting producer
+        synchronized (sharedQueue) {
+            sharedQueue.notifyAll();
+            return (Integer) sharedQueue.remove(0);
+        }
     }
 }
-
