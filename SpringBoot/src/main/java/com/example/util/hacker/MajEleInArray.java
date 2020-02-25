@@ -1,11 +1,12 @@
 package com.example.util.hacker;
 
+import java.util.Collections;
+
 public class MajEleInArray {
 /*reference: https://www.ideserve.co.in/learn/find-majority-element-in-an-array*/
     public static void main(String[] args) {
         /*Boyer-Moore Vote Algorithm*/
-        int n[] = {1,1,3,1,1,5,6};
-
+        int n[] = {1,3,2,3,4,3,2,3,3,3};
         int count=0;
         Integer candidate = null;
 

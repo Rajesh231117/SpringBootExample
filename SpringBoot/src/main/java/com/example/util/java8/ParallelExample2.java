@@ -10,12 +10,12 @@ public class ParallelExample2 {
         System.out.println("Normal...");
 
         List<String> alpha = getData();
-        alpha.stream().forEach(System.out::println);
+        alpha.stream().distinct().forEach(System.out::print);
 
         System.out.println("Parallel...");
 
         List<String> alpha2 = getData();
-        alpha2.parallelStream().forEach(System.out::println);
+        alpha2.parallelStream().forEachOrdered(System.out::print);
 
     }
 
