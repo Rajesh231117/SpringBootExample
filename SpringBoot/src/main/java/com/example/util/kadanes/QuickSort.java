@@ -7,7 +7,7 @@ public class QuickSort {
 
     }
 
-    public static void sort(int arr[],int i,int j){
+   /* public static void sort(int arr[],int i,int j){
         int i=0,j=arr.length-1,pivot=arr.length-1;
 
         while(i<j){
@@ -27,5 +27,5 @@ public class QuickSort {
 
             //if()
         }
-    }
+    }*/
 }

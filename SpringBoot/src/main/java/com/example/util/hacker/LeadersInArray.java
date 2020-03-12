@@ -4,6 +4,7 @@ public class LeadersInArray {
 
     public static void main(String[] args) {
         int n[]={7,4,5,7,3};
+        String str="";
         //brute force n^2
         for(int i=0;i<n.length-1;i++){
             boolean flag = true;

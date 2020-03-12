@@ -1,4 +1,4 @@
- BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+ BufferedReader br = new BufferedReader(new InputStreamReader(System.in)); throws Exception
         String line1 = br.readLine();
         int T = Integer.parseInt(line1);
 
